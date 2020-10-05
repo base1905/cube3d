@@ -6,7 +6,7 @@
 /*   By: arannara <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/03 20:50:10 by arannara          #+#    #+#             */
-/*   Updated: 2020/10/04 18:10:19 by df               ###   ########.fr       */
+/*   Updated: 2020/10/05 10:36:58 by df               ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,51 +34,34 @@ void ft_putstr(char *str)
 	}
 }
 
-int check(char *str, int len, char check)
-{
-	int i;
-
-	i = 0;
-	while (i < len)
-	{
-		if (str[i] == check)
-			return (0);
-		i++;
-	}
-	return(1);
-}
-
 int main(int argc, char *argv[])
 {
+	int mas[255];
+	int code_num;
 	int i;
-	char *str;
-	int len;
 	int j;
 
-	str = NULL;
-	if (argc <= 2 || argc > 3)
-		write(1, "\n", 1);
-	else
+	if (argc == 3)
 	{
+		i = 0;
+		while (i < 255)
+			mas[++i] = 0;
 		i = 1;
-		len = 0;
-		while (argv[i])
-		{	
+		while(i < 3)
+		{
 			j = 0;
-			while (argv[i][j] != '\0')
+			while (argv[i][j])
 			{
-				if (check(str, len, argv[i][j]))
-				{
-					str[len] = argv[i][j];
-					len++;
+				if (!mas[(int)argv[i][j]])
+				{	
+					mas[(int)argv[i][j]] = 1;
+					write(1, &argv[i][j], 1);
 				}
 				j++;
 			}
 			i++;
 		}
-		str[len] = '\0';
-		ft_putstr(str);
 	}
-	return(0);
+	write(1, "\n", 1);
+	return (0);
 }
-//https://github.com/alanbarrett2/42-Final-Exam/tree/master/2-0-union
