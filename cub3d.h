@@ -15,13 +15,6 @@
 
 #include "libft/libft.h"
 
-struct big {
-	char name[30];
-	char street[40];
-	char city[20];
-	char state[3];
-	unsigned long int zip;
-};
 
 
 

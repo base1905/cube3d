@@ -10,28 +10,14 @@
 /*                                                                            */
 /* ************************************************************************** */
 
- #include "cub3d.h"
+#include "cub3d.h"
+#include <stdio.h>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-int main (int argc, char **argv)
+int main(int argc, char **argv)
 {
-	struct big base;
+	if (argc < 2)
+		ft_putendl_fd("Error! No argument with map file", 1);
+	printf("%s", argv[1]);	
 
 	return (0);
 }
