@@ -13,10 +13,19 @@
 #ifndef CUB3D_H
 # define CUB3D_H
 
+#include <fcntl.h>
+#include <errno.h>
+
 #include "libft/libft.h"
+#include "get_next_line/get_next_line.h"
 
 
+typedef struct  s_all 
+{
+    int         fd;
+    int         bmp;
 
+}               t_all;
 
 
 #endif

@@ -9,7 +9,9 @@ OBJ=$(OBJ1:.m=.o)
 CFLAGS+=-O2
 
 # add to match string put with X11 in size and position
-CFLAGS+= -DSTRINGPUTX11
+CFLAGS+= -DSTRINGPUTX11 -Wno-deprecated-declarations
+
+# -Wno-deprecated-declarations dont show warnings about OpenGl not working
 
 all: $(NOM)
 
@@ -22,3 +24,8 @@ clean:
 	rm -f mlx_app
 
 re: clean all
+
+#	*~ matches all files in the current directory that end with ~. 
+#	Why would you have such a file? Because when you use emacs to edit a file foo, 
+#	it will leave a backup copy under foo~ by default. 
+#	So this is intended to remove emacs backup files.

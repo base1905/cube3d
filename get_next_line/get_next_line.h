@@ -17,6 +17,8 @@
 # include <unistd.h>
 # include <limits.h>
 
+# define BUFFER_SIZE 32
+
 size_t	ft_strlen(const char *s);
 char	*ft_strdup(char *str);
 char	*ft_strjoin_free(char *s1, char *s2);

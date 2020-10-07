@@ -14,6 +14,14 @@ NAME = cub3D
 
 SRC = cub3d.c
 
+CC = gcc
+
+CFLAGS = -Wall -Wextra -Werror
+
+# 	‘-I dir’
+#	‘--include-dir=dir’
+#	Specifies a directory dir to search for included makefiles.
+
 HEADER = cub3d.h	
 
 OBJ = $(subst .c,.o,$(SRC))
@@ -22,26 +30,36 @@ LIBFT = ./libft/libft.a
 
 MINILIBX = ./minilibx/libmlx.a
 
+FRAMEWORKS = -framework OpenGL -framework Appkit
+
 all: $(NAME)
 
+#	Automatic Variables
+#	$@ 	The file name of the target of the rule. 
+#	$<	The name of the first prerequisite.
+#	$^	The names of all the prerequisites, with spaces between them.
+
 $(NAME): $(OBJ) 
-	gcc -o $@ $^ -Wall -Wextra -Werror -L ./libft/ -lft
+	$(CC) -o $@ $^ $(CFLAGS) -L ./libft -lft
 
 %.o: %.c $(HEADER) $(LIBFT)
-	gcc -Wall -Wextra -Werror -c $< -o $@
+	$(CC) $(CFLAGS) -c $< -o $@
 
-$(LIBFT):
-	@echo "LIBFT BUILDS"
-	@make -C ./libft/
-	@echo "LIBFT DONE"
+ $(LIBFT):
+	@make -C ./libft
+	@echo "Libft Created"
+	@echo "\n"
+
+# make -C 	‘-C dir’ 
+# 			‘--directory=dir’ Change to directory dir before reading the makefiles.
 
 clean:
-	@make clean -C ./libft/
-	@rm -f $(OBJ)
+	make clean -C ./libft
+	rm -f $(OBJ)
 
 fclean: clean
-	@make clean -C ./libft/
-	@rm -f $(NAME)
+	make fclean -C ./libft
+	rm -f $(NAME)
 
 re: fclean all
 
