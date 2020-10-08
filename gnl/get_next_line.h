@@ -1,36 +1,29 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   cub3d.h                                            :+:      :+:    :+:   */
+/*   get_next_line.h                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: arannara <base1905@yandex.ru>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2020/10/05 12:46:55 by arannara          #+#    #+#             */
-/*   Updated: 2020/10/05 14:11:19 by arannara         ###   ########.fr       */
+/*   Created: 2020/06/20 00:13:51 by arannara          #+#    #+#             */
+/*   Updated: 2020/06/20 00:13:53 by arannara         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef CUB3D_H
-# define CUB3D_H
+#ifndef GET_NEXT_LINE_H
+# define GET_NEXT_LINE_H
 
-#include <fcntl.h>
-#include <errno.h>
+# include <stdlib.h>
+# include <unistd.h>
+# include <limits.h>
+# include "../libft/libft.h"
 
-#include "libft/libft.h"
-#include "gnl/get_next_line.h"
+# define BUFFER_SIZE 32
 
-
-typedef struct  s_all 
-{
-    int         fd;
-    char        *line;
-    int         bmp;
-    int         screen_x;
-    int         screen_y;
-    
-
-
-}               t_all;
-
+size_t	ft_strlen(const char *s);
+//char	*ft_strdup(const char *str);
+char	*ft_strjoin_free(char *s1, char *s2);
+char	*ft_strchr_n(const char *s);
+int		get_next_line(int fd, char **line);
 
 #endif
