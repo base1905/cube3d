@@ -19,6 +19,10 @@ void ft_initstruct(t_all *pb)
 	pb->bmp = 0;
 	pb->screen_x = 0;
 	pb->screen_y = 0;
+	pb->map_height = 0;
+	pb->map_width = 0;
+	pb->allmap = NULL;
+	pb->map_array = NULL;
 }
 
 void ft_resolution(t_all *pb, char *s)
@@ -37,29 +41,90 @@ void ft_resolution(t_all *pb, char *s)
 		s++;
 	if (*s != '\0')
 		ft_putendl_fd("Unacceptable symbol after resolution",2);
-		
 	printf("%d\n%d", pb->screen_x, pb->screen_y);
 	printf("\n");
+}
+
+
+void ft_mapser(t_all *pb)
+{
+	char *tmp;
+
+	pb->map_width = ft_strlen(pb->line);
+	pb->map_height = 1;
+	ft_putstr_fd("Map reading\n",2 );
+		
+	tmp = pb->line;
+	pb->allmap = ft_strjoin(pb->line, "\n");
+	free(tmp);
+	pb->line = NULL;
+
+	while ((get_next_line(pb->fd, &(pb->line))) > 0)
+	{
+		tmp = pb->allmap;
+		pb->allmap = ft_strjoin(pb->allmap, pb->line);
+		free(tmp);
+		tmp = pb->allmap;
+		pb->allmap = ft_strjoin(pb->allmap,"\n");
+		free(tmp);
+		pb->map_height++;
+		free(pb->line);
+		pb->line = NULL;
+	}
+	pb->map_array = ft_split(pb->allmap, '\n');
+	free(pb->allmap);
+	pb->allmap = NULL;
+
+}
+int ft_ismapstring(char *s)
+{
+	while (*s != '\0')
+		if (*s == '1' || *s == ' ')
+			return (1);
+	return (0);
+}
+static int ft_processor(t_all *pb)
+{
+	if (strncmp(pb->line, "R", 1) == 0)
+		ft_resolution(pb, pb->line + 1);
+	else if (ft_ismapstring(pb->line))
+	{
+		ft_mapser(pb);
+		return (0);
+	}
+	else
+	{
+		printf("base");
+	}
+	
+	return (1);
 }
 
 void ft_parcer(t_all *pb)
 {
 	int gnlreturn;
+	int parsereturn;
 
-	while ((gnlreturn = get_next_line(pb->fd, &(pb->line))) > 0)	
+	while ((gnlreturn = get_next_line(pb->fd, &(pb->line))) >= 0)	
 	{
-		if (strncmp(pb->line, "R", 1) == 0)
-			ft_resolution(pb, pb->line + 1);
-		else if (ft_strlen(pb->line) > 0)
-			free (pb->line);
+		parsereturn = ft_processor(pb);
+		printf("ft_pocessor result is %d\n", parsereturn);
+
+		if (gnlreturn == 0 || parsereturn == 0)
+		{
+			close(pb->fd);
+			break ;
+		}
+		free(pb->line);
 		pb->line = NULL;
+		
 	}
 	if (gnlreturn < 0)
 	{
 		ft_putstr_fd("GNL ERRNO: ", 2);
 		ft_putendl_fd(strerror(errno), 2);
 	}
-
+ 
 }
 
 
@@ -67,6 +132,7 @@ void ft_parcer(t_all *pb)
 int main(int argc, char **argv)
 {
 	t_all base;
+	int i;
 
 	if (argc < 2)
 		ft_putendl_fd("Error! No argument with map file", 2);
@@ -90,6 +156,10 @@ int main(int argc, char **argv)
 	ft_initstruct(&base);
 	ft_parcer(&base);
 
-	printf("testing %d, %d", base.bmp, base.fd);
+	i = -1;
+	printf("testing %d, %d\n", base.bmp, base.fd);
+	while (base.map_array[++i] != '\0')
+		printf("%s\n", base.map_array[i]);
+	
 	return (0);
 }

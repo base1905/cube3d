@@ -24,12 +24,14 @@ typedef struct  s_all
 {
     int         fd;
     char        *line;
+    char        *allmap;
     int         bmp;
     int         screen_x;
     int         screen_y;
+    int         map_height;
+    int         map_width;
+    char        **map_array;
     
-
-
 }               t_all;
 
 
