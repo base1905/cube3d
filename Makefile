@@ -16,7 +16,7 @@ SRC = gnl/get_next_line.c gnl/get_next_line_utils.c cub3d.c
 
 CC = gcc
 
-CFLAGS = -Wall -Wextra -Werror
+CFLAGS = -Wall -Wextra -Werror -g
 
 # 	‘-I dir’
 #	‘--include-dir=dir’
@@ -47,7 +47,7 @@ $(NAME): $(OBJ)
 
  $(LIBFT):
 	@make -C ./libft
-	@echo "Libft Created"
+	@echo "\033[7;32m Libft created \033[0m"
 	@echo "\n"
 
 # make -C 	‘-C dir’ 

@@ -30,7 +30,7 @@ $(NAME): $(OBJ) $(HEADER)
 	ar rc $(NAME) $(OBJ)
 	ranlib $(NAME)
 	@echo "\n"
-	@echo "Object files created"
+	@echo "\033[0;32m Object files created \033[0m"
 	@echo "\n"
 
 %.o: %.c $(HEADER)

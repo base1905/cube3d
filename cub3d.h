@@ -31,6 +31,9 @@ typedef struct  s_all
     int         map_height;
     int         map_width;
     char        **map_array;
+    char        *path[5];
+    int         rgb_ceiling;
+    int         rgb_floor;
     
 }               t_all;
 
