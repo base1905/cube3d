@@ -240,11 +240,11 @@ void ft_parcer(t_all *pb)
  
 }
 
-void my_mlx_pixel_put(t_data *swin, int x, int y, int color)
+void            my_mlx_pixel_put(t_data *data, int x, int y, int color)
 {
     char    *dst;
 
-    dst = swin->addr + (y * swin->line_length + x * (swin->bits_per_pixel / 8));
+    dst = data->addr + (y * data->line_length + x * (data->bits_per_pixel / 8));
     *(unsigned int*)dst = color;
 }
 
@@ -259,7 +259,22 @@ int	ft_close(int keycode, t_all *pb)
 	}
 	return(0);
 }
+/*
+void ft_rendering(t_all *pb, t_data *img)
+{
+	int i;
 
+	i = -1;
+
+	img->img = mlx_new_image(pb->mlx, pb->screen_x, pb->screen_y);
+	img->addr = mlx_get_data_addr(img->img, &img->bits_per_pixel, &img->line_length, &img->endian);
+
+	while (i < pb->screen_x * pb->screen_y )
+		img->addr[i] = pb->rgb_ceiling;
+
+
+}
+*/
 int main(int argc, char **argv)
 {
 	t_all base;
@@ -286,9 +301,11 @@ int main(int argc, char **argv)
 	}
 	ft_initstruct(&base);
 	ft_parcer(&base);
+	printf("%d x %d\n", base.screen_x, base.screen_y);
 	printf("map W=%d, H=%d\n", base.map_width, base.map_height);
+	printf("%d\n", base.rgb_ceiling);
 /*
-	printf("%d x %d", pb->screen_x, pb->screen_y);
+	
 	printf("\n");
 	i = -1;
 	printf("testing %d, %d\n", base.bmp, base.fd);
@@ -302,18 +319,33 @@ int main(int argc, char **argv)
 	printf("%s\n", base.path[4]);
 	printf("%d\n", base.rgb_floor);
 	printf("%d\n", base.rgb_ceiling);*/
+ 
+  
+    t_data  img;
+	int i;
+	int j;
 
-    t_data swin;
+	i = -1;
+	j = -1;
 
     base.mlx = mlx_init();
-    base.window = mlx_new_window(&base.mlx, 1920, 1080, "cub3D");
+    base.window = mlx_new_window(base.mlx, 1024, 768, "Hello world!");
 
-   	swin.img = mlx_new_image(&base.mlx, 1920, 1080);
-    swin.addr = mlx_get_data_addr(swin.img, &swin.bits_per_pixel, &swin.line_length,  &swin.endian);
+    img.img = mlx_new_image(base.mlx, 1024, 768);
+    img.addr = mlx_get_data_addr(img.img, &img.bits_per_pixel, &img.line_length,
+                                 &img.endian);
+    //my_mlx_pixel_put(&img, 5, 5, 0x00FF0000);
+	//ft_rendering(&base, &img);
 
-	my_mlx_pixel_put(&swin, 5, 5, 0x00FF0000);
-    mlx_put_image_to_window(base.mlx, base.window, swin.img, 0, 0);
-
+	
+		while (i < 10)
+		{
+			my_mlx_pixel_put(&img, i, 10, base.rgb_floor);
+			i++;
+		}
+	
+	
+    mlx_put_image_to_window(base.mlx, base.window, img.img, 0, 0);
 	mlx_hook(base.window, 2, 1L << 0, &ft_close, &base);
     mlx_loop(base.mlx);
 

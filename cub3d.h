@@ -17,9 +17,11 @@
 #include <errno.h>
 #include <math.h>
 
-#include "mlx/mlx.h"
+#include "minilibx/mlx.h"
 #include "libft/libft.h"
 #include "gnl/get_next_line.h"
+
+
 
 
 typedef struct  s_data {
@@ -29,6 +31,14 @@ typedef struct  s_data {
     int         line_length;
     int         endian;
 }               t_data;
+
+typedef struct  s_player {
+    int     start_x;
+    int     start_y;
+    char    start_dir;
+
+
+}               t_player;
 
 typedef struct  s_all 
 {

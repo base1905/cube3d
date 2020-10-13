@@ -12,8 +12,6 @@
 
 NAME = cub3D
 
-
-
 SRC = gnl/get_next_line.c gnl/get_next_line_utils.c cub3d.c
 
 CC = gcc
@@ -30,7 +28,7 @@ LIBFT = ./libft/libft.a
 
 MINILIBX = ./minilibx/libmlx.a
 
-LIBRARIES = -lm -L./libft/ -lft -L./mlx/ -lmlx 
+LIBRARIES = -lm -L./libft/ -lft -L./minilibx/ -lmlx  
 
 FRAMEWORKS = -framework OpenGL -framework Appkit
 
@@ -48,12 +46,12 @@ $(NAME): $(OBJ)
 	$(CC) $(CFLAGS)  -c $< -o $@
 
 $(LIBFT):
-	@make -C ./libft
+	@cd libft && make
 	@echo "\033[7;32m Libft created \033[0m"
 	@echo "\n"
 
 $(MINILIBX):
-	@make -C ./mlx
+	@cd minilibx && make
 	@echo "\033[7;32m MiniLibX created \033[0m"
 	@echo "\n"
 
@@ -61,12 +59,14 @@ $(MINILIBX):
 # 			‘--directory=dir’ Change to directory dir before reading the makefiles.
 
 clean:
-	make clean -C ./libft
-	make clean -C ./mlx
+	cd libft && make clean
+	@echo "\033[2;32m Libft cleaned \033[0m"
+	cd minilibx && make clean
+	@echo "\033[2;32m Minilibx cleaned \033[0m"
 	rm -f $(OBJ)
 
 fclean: clean
-	make fclean -C ./libft
+	cd libft && make fclean
 	rm -f $(NAME)
 
 re: fclean all
