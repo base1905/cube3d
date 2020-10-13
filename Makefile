@@ -12,15 +12,15 @@
 
 NAME = cub3D
 
+
+
 SRC = gnl/get_next_line.c gnl/get_next_line_utils.c cub3d.c
 
 CC = gcc
+CFLAGS = -Wall -Wextra -Werror
 
-CFLAGS = -Wall -Wextra -Werror -g
-
-# 	‘-I dir’
-#	‘--include-dir=dir’
-#	Specifies a directory dir to search for included makefiles.
+#	-Ldir
+#	Add directory dir to the list of directories to be searched for -l.
 
 HEADER = cub3d.h	
 
@@ -29,6 +29,8 @@ OBJ = $(subst .c,.o,$(SRC))
 LIBFT = ./libft/libft.a
 
 MINILIBX = ./minilibx/libmlx.a
+
+LIBRARIES = -lm -L./libft/ -lft -L./mlx/ -lmlx 
 
 FRAMEWORKS = -framework OpenGL -framework Appkit
 
@@ -40,14 +42,19 @@ all: $(NAME)
 #	$^	The names of all the prerequisites, with spaces between them.
 
 $(NAME): $(OBJ) 
-	$(CC) -o $@ $^ $(CFLAGS) -L ./libft -lft
+	$(CC) -o $@ $^ $(CFLAGS) $(LIBRARIES) $(FRAMEWORKS) 
 
-%.o: %.c $(HEADER) $(LIBFT)
-	$(CC) $(CFLAGS) -c $< -o $@
+%.o: %.c $(HEADER) $(LIBFT) $(MINILIBX)
+	$(CC) $(CFLAGS)  -c $< -o $@
 
- $(LIBFT):
+$(LIBFT):
 	@make -C ./libft
 	@echo "\033[7;32m Libft created \033[0m"
+	@echo "\n"
+
+$(MINILIBX):
+	@make -C ./mlx
+	@echo "\033[7;32m MiniLibX created \033[0m"
 	@echo "\n"
 
 # make -C 	‘-C dir’ 
@@ -55,6 +62,7 @@ $(NAME): $(OBJ)
 
 clean:
 	make clean -C ./libft
+	make clean -C ./mlx
 	rm -f $(OBJ)
 
 fclean: clean

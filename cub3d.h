@@ -15,10 +15,20 @@
 
 #include <fcntl.h>
 #include <errno.h>
+#include <math.h>
 
+#include "mlx/mlx.h"
 #include "libft/libft.h"
 #include "gnl/get_next_line.h"
 
+
+typedef struct  s_data {
+    void        *img;
+    char        *addr;
+    int         bits_per_pixel;
+    int         line_length;
+    int         endian;
+}               t_data;
 
 typedef struct  s_all 
 {
@@ -34,6 +44,8 @@ typedef struct  s_all
     char        *path[5];
     int         rgb_ceiling;
     int         rgb_floor;
+    void        *window;
+    void        *mlx;
     
 }               t_all;
 

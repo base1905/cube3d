@@ -29,9 +29,6 @@ all: $(NAME)
 $(NAME): $(OBJ) $(HEADER)
 	ar rc $(NAME) $(OBJ)
 	ranlib $(NAME)
-	@echo "\n"
-	@echo "\033[0;32m Object files created \033[0m"
-	@echo "\n"
 
 %.o: %.c $(HEADER)
 	gcc -Wall -Wextra -Werror -c $< -o $@

@@ -28,7 +28,8 @@ void ft_initstruct(t_all *pb)
 	i = -1;
 	while (++i < 5)
 		pb->path[i] = NULL;
-
+	pb->window = NULL;
+	pb->mlx = NULL;
 }
 
 void free_struct(t_all *pb)
@@ -239,6 +240,26 @@ void ft_parcer(t_all *pb)
  
 }
 
+void my_mlx_pixel_put(t_data *swin, int x, int y, int color)
+{
+    char    *dst;
+
+    dst = swin->addr + (y * swin->line_length + x * (swin->bits_per_pixel / 8));
+    *(unsigned int*)dst = color;
+}
+
+int	ft_close(int keycode, t_all *pb)
+{
+
+	if (keycode == 53)
+	{
+		mlx_clear_window(pb->mlx, pb->window);
+    	mlx_destroy_window(pb->mlx, pb->window);
+		exit(0);
+	}
+	return(0);
+}
+
 int main(int argc, char **argv)
 {
 	t_all base;
@@ -281,5 +302,20 @@ int main(int argc, char **argv)
 	printf("%s\n", base.path[4]);
 	printf("%d\n", base.rgb_floor);
 	printf("%d\n", base.rgb_ceiling);*/
-	return (0);
+
+    t_data swin;
+
+    base.mlx = mlx_init();
+    base.window = mlx_new_window(&base.mlx, 1920, 1080, "cub3D");
+
+   	swin.img = mlx_new_image(&base.mlx, 1920, 1080);
+    swin.addr = mlx_get_data_addr(swin.img, &swin.bits_per_pixel, &swin.line_length,  &swin.endian);
+
+	my_mlx_pixel_put(&swin, 5, 5, 0x00FF0000);
+    mlx_put_image_to_window(base.mlx, base.window, swin.img, 0, 0);
+
+	mlx_hook(base.window, 2, 1L << 0, &ft_close, &base);
+    mlx_loop(base.mlx);
+
+
 }
