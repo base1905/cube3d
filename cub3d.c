@@ -13,7 +13,7 @@
 #include "cub3d.h"
 #include <stdio.h>
 
-void ft_initstruct(t_all *pb)
+void	ft_initstruct(t_all *pb)
 {
 	int i;
 
@@ -32,7 +32,7 @@ void ft_initstruct(t_all *pb)
 	pb->mlx = NULL;
 }
 
-void free_struct(t_all *pb)
+void	free_struct(t_all *pb)
 {
 	int i;
 
@@ -45,14 +45,14 @@ void free_struct(t_all *pb)
 
 }
 
-int ft_exit_error(t_all *pb)
+int		ft_exit_error(t_all *pb)
 {
 	free_struct(pb);
 	exit(1);
 	return (1);
 }
 
-void ft_resolution(t_all *pb, char *s)
+void	ft_resolution(t_all *pb, char *s)
 {
 	while (*s == ' ')
 		s++;
@@ -76,7 +76,7 @@ void ft_resolution(t_all *pb, char *s)
 	}
 }
 
-int ft_ismapstring(char *s)
+int		ft_ismapstring(char *s)
 {
 	int l;
 	int space;
@@ -99,7 +99,7 @@ int ft_ismapstring(char *s)
 	return (1);
 }
 
-void ft_mapser(t_all *pb)
+void	ft_mapser(t_all *pb)
 {
 	char *tmp;
 	int i;
@@ -142,19 +142,19 @@ void ft_mapser(t_all *pb)
 
 }
 
-void ft_path(char *s, char **path)
+void	ft_path(char *s, char **path)
 {
 	while (*s == ' ')
 		s++;
 	*path = ft_strdup(s);
 }
 
-int ft_rgb2int(int a, int r, int g, int b)
+int		ft_rgb2int(int a, int r, int g, int b)
 {
 	return (a << 24 | r << 16 | g << 8 | b);
 }
 
-void ft_rgb(t_all *pb, char *s, int *rgb)
+void	ft_rgb(t_all *pb, char *s, int *rgb)
 {
 	int i;
 	int digit[3];
@@ -181,7 +181,7 @@ void ft_rgb(t_all *pb, char *s, int *rgb)
 	
 }
 
-static int ft_processor(t_all *pb)
+int		ft_processor(t_all *pb)
 {
 	if (strncmp(pb->line, "R", 1) == 0)
 		ft_resolution(pb, pb->line + 1);
@@ -213,7 +213,7 @@ static int ft_processor(t_all *pb)
 	return (1);
 }
 
-void ft_parcer(t_all *pb)
+void	ft_parcer(t_all *pb)
 {
 	int i;
 	int map_gnl;
@@ -240,15 +240,37 @@ void ft_parcer(t_all *pb)
  
 }
 
-void            my_mlx_pixel_put(t_data *data, int x, int y, int color)
+void	my_mlx_pixel_put(t_data *img, int x, int y, int color)
 {
     char    *dst;
 
-    dst = data->addr + (y * data->line_length + x * (data->bits_per_pixel / 8));
+    dst = img->addr + (y * img->line_length + x * (img->bits_per_pixel / 8));
     *(unsigned int*)dst = color;
 }
 
-int	ft_close(int keycode, t_all *pb)
+void	ft_ceiling_floor(t_all *pb, t_data *img)
+{
+	int x;
+	int y;
+
+	y = -1;
+	while (++y < pb->screen_y / 2)
+	{
+		x = -1;
+		while (++x < pb->screen_x)
+			my_mlx_pixel_put(img, x, y, pb->rgb_ceiling);
+	}
+	y--;
+	while (++y < pb->screen_y)
+	{
+		x = -1;
+		while (++x < pb->screen_x)
+			my_mlx_pixel_put(img, x, y, pb->rgb_floor);
+	}
+
+}
+
+int		ft_close(int keycode, t_all *pb)
 {
 
 	if (keycode == 53)
@@ -259,26 +281,60 @@ int	ft_close(int keycode, t_all *pb)
 	}
 	return(0);
 }
-/*
-void ft_rendering(t_all *pb, t_data *img)
+
+
+void	ft_print_map_square(t_data *img, int x, int y)
+{
+	int x1;
+	int x2;
+	int y1;
+	int y2;
+
+	int back;
+
+	x1 = x * MAPw;
+	x2 = x1 + MAPw;
+	y1 = y * MAPh;
+	y2 = y1 + MAPh;
+	back = x1;
+
+	while (y1 < y2)
+	{
+		x1 = back;
+			while (x1 < x2)
+			{
+				my_mlx_pixel_put(img, x1, y1, 0x00FFFFFF);
+				x1++;
+			}
+		y1++;
+	}
+}
+void	ft_printmap(t_all *pb, t_data *img)
 {
 	int i;
+	int j;
 
-	i = -1;
+	i = 0;
+	j = 0;
 
-	img->img = mlx_new_image(pb->mlx, pb->screen_x, pb->screen_y);
-	img->addr = mlx_get_data_addr(img->img, &img->bits_per_pixel, &img->line_length, &img->endian);
-
-	while (i < pb->screen_x * pb->screen_y )
-		img->addr[i] = pb->rgb_ceiling;
-
-
+	while (pb->map_array[j] != NULL)
+	{
+		i = 0;
+		while (pb->map_array[j][i] != '\0')
+		{
+			if (pb->map_array[j][i] == '0')
+				ft_print_map_square(img, i, j);
+			i++;	
+		}
+		j++;
+	}
 }
-*/
-int main(int argc, char **argv)
+
+
+
+int		main(int argc, char **argv)
 {
 	t_all base;
-	//int i;
 
 	if (argc < 2)
 		ft_putendl_fd("Error! No argument with map file", 2);
@@ -304,29 +360,8 @@ int main(int argc, char **argv)
 	printf("%d x %d\n", base.screen_x, base.screen_y);
 	printf("map W=%d, H=%d\n", base.map_width, base.map_height);
 	printf("%d\n", base.rgb_ceiling);
-/*
-	
-	printf("\n");
-	i = -1;
-	printf("testing %d, %d\n", base.bmp, base.fd);
-	while (base.map_array[++i] != '\0')
-		printf("%s\n", base.map_array[i]);
-	
-	printf("%s\n", base.path[0]);
-	printf("%s\n", base.path[1]);
-	printf("%s\n", base.path[2]);
-	printf("%s\n", base.path[3]);
-	printf("%s\n", base.path[4]);
-	printf("%d\n", base.rgb_floor);
-	printf("%d\n", base.rgb_ceiling);*/
- 
   
     t_data  img;
-	int i;
-	int j;
-
-	i = -1;
-	j = -1;
 
     base.mlx = mlx_init();
     base.window = mlx_new_window(base.mlx, 1024, 768, "Hello world!");
@@ -334,17 +369,11 @@ int main(int argc, char **argv)
     img.img = mlx_new_image(base.mlx, 1024, 768);
     img.addr = mlx_get_data_addr(img.img, &img.bits_per_pixel, &img.line_length,
                                  &img.endian);
-    //my_mlx_pixel_put(&img, 5, 5, 0x00FF0000);
-	//ft_rendering(&base, &img);
+   
+	ft_ceiling_floor(&base, &img);
+	ft_printmap(&base, &img);
+	
 
-	
-		while (i < 10)
-		{
-			my_mlx_pixel_put(&img, i, 10, base.rgb_floor);
-			i++;
-		}
-	
-	
     mlx_put_image_to_window(base.mlx, base.window, img.img, 0, 0);
 	mlx_hook(base.window, 2, 1L << 0, &ft_close, &base);
     mlx_loop(base.mlx);

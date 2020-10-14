@@ -1,4 +1,4 @@
-R 752 1080
+R 1024 768
 
 NO ./path_ to_the_north_texture
 
@@ -10,9 +10,9 @@ EA ./path_to_the_east_texture
 
 S ./path_to_the_sprite_texture
 
-F 220,100,0
+F 122,4,235
 
-C 225,30,0
+C 254,117,254
 
 
         1111111111111111111111111

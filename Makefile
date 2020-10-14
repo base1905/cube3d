@@ -15,7 +15,7 @@ NAME = cub3D
 SRC = gnl/get_next_line.c gnl/get_next_line_utils.c cub3d.c
 
 CC = gcc
-CFLAGS = -Wall -Wextra -Werror
+CFLAGS = -Wall -Wextra -Werror -g
 
 #	-Ldir
 #	Add directory dir to the list of directories to be searched for -l.

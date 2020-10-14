@@ -21,7 +21,8 @@
 #include "libft/libft.h"
 #include "gnl/get_next_line.h"
 
-
+# define MAPh 16
+# define MAPw 8
 
 
 typedef struct  s_data {
