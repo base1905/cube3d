@@ -21,8 +21,7 @@
 #include "libft/libft.h"
 #include "gnl/get_next_line.h"
 
-# define MAPh 16
-# define MAPw 8
+# define MAP 16
 
 
 typedef struct  s_data {
@@ -34,10 +33,12 @@ typedef struct  s_data {
 }               t_data;
 
 typedef struct  s_player {
-    int     start_x;
-    int     start_y;
-    char    start_dir;
-
+    double      start_x;
+    double      start_y;
+    char        start_dir;
+    double      dir;
+    double      start;
+    double      end;
 
 }               t_player;
 
@@ -57,6 +58,8 @@ typedef struct  s_all
     int         rgb_floor;
     void        *window;
     void        *mlx;
+    t_player    *plr;
+    t_data      *img;
     
 }               t_all;
 

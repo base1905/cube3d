@@ -13,7 +13,7 @@
 #include "cub3d.h"
 #include <stdio.h>
 
-void	ft_initstruct(t_all *pb)
+void	ft_initstruct(t_all *pb, t_player *plr)
 {
 	int i;
 
@@ -30,6 +30,12 @@ void	ft_initstruct(t_all *pb)
 		pb->path[i] = NULL;
 	pb->window = NULL;
 	pb->mlx = NULL;
+
+	plr->start_x = 26 * MAP + MAP / 2;
+	plr->start_y = 10 * MAP + MAP / 2;
+	plr->start_dir = 'N';
+	plr->dir = M_PI / 2;
+
 }
 
 void	free_struct(t_all *pb)
@@ -248,7 +254,7 @@ void	my_mlx_pixel_put(t_data *img, int x, int y, int color)
     *(unsigned int*)dst = color;
 }
 
-void	ft_ceiling_floor(t_all *pb, t_data *img)
+void	ft_ceiling_floor(t_all *pb)
 {
 	int x;
 	int y;
@@ -258,30 +264,17 @@ void	ft_ceiling_floor(t_all *pb, t_data *img)
 	{
 		x = -1;
 		while (++x < pb->screen_x)
-			my_mlx_pixel_put(img, x, y, pb->rgb_ceiling);
+			my_mlx_pixel_put(pb->img, x, y, pb->rgb_ceiling);
 	}
 	y--;
 	while (++y < pb->screen_y)
 	{
 		x = -1;
 		while (++x < pb->screen_x)
-			my_mlx_pixel_put(img, x, y, pb->rgb_floor);
+			my_mlx_pixel_put(pb->img, x, y, pb->rgb_floor);
 	}
 
 }
-
-int		ft_close(int keycode, t_all *pb)
-{
-
-	if (keycode == 53)
-	{
-		mlx_clear_window(pb->mlx, pb->window);
-    	mlx_destroy_window(pb->mlx, pb->window);
-		exit(0);
-	}
-	return(0);
-}
-
 
 void	ft_print_map_square(t_data *img, int x, int y)
 {
@@ -292,10 +285,10 @@ void	ft_print_map_square(t_data *img, int x, int y)
 
 	int back;
 
-	x1 = x * MAPw;
-	x2 = x1 + MAPw;
-	y1 = y * MAPh;
-	y2 = y1 + MAPh;
+	x1 = x * MAP;
+	x2 = x1 + MAP;
+	y1 = y * MAP;
+	y2 = y1 + MAP;
 	back = x1;
 
 	while (y1 < y2)
@@ -309,7 +302,7 @@ void	ft_print_map_square(t_data *img, int x, int y)
 		y1++;
 	}
 }
-void	ft_printmap(t_all *pb, t_data *img)
+void	ft_printmap(t_all *pb)
 {
 	int i;
 	int j;
@@ -323,18 +316,78 @@ void	ft_printmap(t_all *pb, t_data *img)
 		while (pb->map_array[j][i] != '\0')
 		{
 			if (pb->map_array[j][i] == '0')
-				ft_print_map_square(img, i, j);
+				ft_print_map_square(pb->img, i, j);
 			i++;	
 		}
 		j++;
 	}
 }
 
+void 	ft_rays_map_player(t_all *pb)
+{
+
+
+	t_player	ray = *pb->plr; // копируем координаты луча равные координатам игрока
+
+	float start = ray.dir - M_PI_4; // начало веера лучей
+ 	float end = ray.dir + M_PI_4; // край веера лучей
+	
+	while (start <= end)
+	{
+		ray.start_x = pb->plr->start_x; // каждый раз возвращаемся в точку начала
+		ray.start_y = pb->plr->start_y;
+		while (pb->map_array[(int)(ray.start_y / MAP)][(int)(ray.start_x / MAP)] != '1')
+		{
+			ray.start_x += cos(start);
+			ray.start_y -= sin(start);
+			my_mlx_pixel_put(pb->img, ray.start_x, ray.start_y, 0x00000000);
+		}
+		start += M_PI_2 / 40;
+	}
+}
+
+void ft_draw_screen(t_all *pb)
+{
+	ft_ceiling_floor(pb);
+	ft_printmap(pb);
+	ft_rays_map_player(pb);
+	mlx_put_image_to_window(pb->mlx, pb->window, pb->img->img, 0, 0);
+}
+
+int	ft_key_press(int key, t_all *pb)
+{
+	mlx_clear_window(pb->mlx, pb->window);
+	if (key == 13)
+	{
+		pb->plr->start_y -= sin(pb->plr->dir) * 4;
+		pb->plr->start_x += cos(pb->plr->dir) * 4;
+	}
+	if (key == 1)
+	{
+		pb->plr->start_y += sin(pb->plr->dir) * 4;
+		pb->plr->start_x -= cos(pb->plr->dir) * 4;
+	}
+	if (key == 0)
+		pb->plr->dir -= 0.1;
+	if (key == 2)
+		pb->plr->dir += 0.1;
+	if (key == 53)
+	{
+		mlx_clear_window(pb->mlx, pb->window);
+    	mlx_destroy_window(pb->mlx, pb->window);
+		exit(0);
+	}
+	ft_draw_screen(pb);
+
+	return (0);
+}
 
 
 int		main(int argc, char **argv)
 {
 	t_all base;
+	t_data  img;
+	t_player plr;
 
 	if (argc < 2)
 		ft_putendl_fd("Error! No argument with map file", 2);
@@ -355,13 +408,13 @@ int		main(int argc, char **argv)
 			ft_putendl_fd(strerror(errno), 2);
 		}
 	}
-	ft_initstruct(&base);
+	ft_initstruct(&base, &plr);
 	ft_parcer(&base);
-	printf("%d x %d\n", base.screen_x, base.screen_y);
-	printf("map W=%d, H=%d\n", base.map_width, base.map_height);
+
 	printf("%d\n", base.rgb_ceiling);
-  
-    t_data  img;
+    
+	base.img = &img;
+	base.plr = &plr;
 
     base.mlx = mlx_init();
     base.window = mlx_new_window(base.mlx, 1024, 768, "Hello world!");
@@ -370,12 +423,9 @@ int		main(int argc, char **argv)
     img.addr = mlx_get_data_addr(img.img, &img.bits_per_pixel, &img.line_length,
                                  &img.endian);
    
-	ft_ceiling_floor(&base, &img);
-	ft_printmap(&base, &img);
-	
+	ft_draw_screen(&base);
 
-    mlx_put_image_to_window(base.mlx, base.window, img.img, 0, 0);
-	mlx_hook(base.window, 2, 1L << 0, &ft_close, &base);
+	mlx_hook(base.window, 2, 1L << 0, &ft_key_press, &base);
     mlx_loop(base.mlx);
 
 
