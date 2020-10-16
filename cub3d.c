@@ -246,62 +246,63 @@ void	ft_parcer(t_all *pb)
  
 }
 
-void	my_mlx_pixel_put(t_data *img, int x, int y, int color)
-{
-    char    *dst;
+//void	my_mlx_pixel_put(t_data *img, int x, int y, int color)
+//{
+//    int    *dst;
+//
+//    dst = img->addr + (y * img->line_length + x * (img->bits_per_pixel / 8));
+//    *(unsigned int*)dst = color;
+//}
+//
+//void	ft_ceiling_floor(t_all *pb)
+//{
+//	int x;
+//	int y;
+//
+//	y = -1;
+//	while (++y < pb->screen_y / 2)
+//	{
+//		x = -1;
+//		while (++x < pb->screen_x)
+//			my_mlx_pixel_put(pb->img, x, y, pb->rgb_ceiling);
+//	}
+//	y--;
+//	while (++y < pb->screen_y)
+//	{
+//		x = -1;
+//		while (++x < pb->screen_x)
+//			my_mlx_pixel_put(pb->img, x, y, pb->rgb_floor);
+//	}
+//
+//}
 
-    dst = img->addr + (y * img->line_length + x * (img->bits_per_pixel / 8));
-    *(unsigned int*)dst = color;
-}
-
-void	ft_ceiling_floor(t_all *pb)
-{
-	int x;
-	int y;
-
-	y = -1;
-	while (++y < pb->screen_y / 2)
-	{
-		x = -1;
-		while (++x < pb->screen_x)
-			my_mlx_pixel_put(pb->img, x, y, pb->rgb_ceiling);
-	}
-	y--;
-	while (++y < pb->screen_y)
-	{
-		x = -1;
-		while (++x < pb->screen_x)
-			my_mlx_pixel_put(pb->img, x, y, pb->rgb_floor);
-	}
-
-}
-
-void	ft_print_map_square(t_data *img, int x, int y)
-{
-	int x1;
-	int x2;
-	int y1;
-	int y2;
-
-	int back;
-
-	x1 = x * MAP;
-	x2 = x1 + MAP;
-	y1 = y * MAP;
-	y2 = y1 + MAP;
-	back = x1;
-
-	while (y1 < y2)
-	{
-		x1 = back;
-			while (x1 < x2)
-			{
-				my_mlx_pixel_put(img, x1, y1, 0x00FFFFFF);
-				x1++;
-			}
-		y1++;
-	}
-}
+//void	ft_print_map_square(t_data *img, int x, int y)
+//{
+//	int x1;
+//	int x2;
+//	int y1;
+//	int y2;
+//
+//	int back;
+//
+//	x1 = x * MAP;
+//	x2 = x1 + MAP;
+//	y1 = y * MAP;
+//	y2 = y1 + MAP;
+//	back = x1;
+//
+//	while (y1 < y2)
+//	{
+//		x1 = back;
+//			while (x1 < x2)
+//			{
+//				img->addr[x1] = 0x00FFFFFF;
+//				//my_mlx_pixel_put(img, x1, y1, 0x00FFFFFF);
+//				x1++;
+//			}
+//		y1++;
+//	}
+//}
 void	ft_printmap(t_all *pb)
 {
 	int i;
@@ -316,17 +317,16 @@ void	ft_printmap(t_all *pb)
 		while (pb->map_array[j][i] != '\0')
 		{
 			if (pb->map_array[j][i] == '0')
-				ft_print_map_square(pb->img, i, j);
+				pb->img->addr[i*100] = 0x00FFFFFF;
+				//ft_print_map_square(pb->img, i, j);
 			i++;	
 		}
 		j++;
 	}
 }
 
-void 	ft_rays_map_player(t_all *pb)
+/*void 	ft_rays_map_player(t_all *pb)
 {
-
-
 	t_player	ray = *pb->plr; // копируем координаты луча равные координатам игрока
 
 	float start = ray.dir - M_PI_4; // начало веера лучей
@@ -344,14 +344,21 @@ void 	ft_rays_map_player(t_all *pb)
 		}
 		start += M_PI_2 / 40;
 	}
-}
+}*/
 
 void ft_draw_screen(t_all *pb)
 {
-	ft_ceiling_floor(pb);
+	
+    pb->img->img = mlx_new_image(pb->mlx, 1024, 768);
+    pb->img->addr = (int *)mlx_get_data_addr(pb->img->img, &pb->img->bits_per_pixel, &pb->img->line_length,
+                                 &pb->img->endian);
+   
+	//ft_ceiling_floor(pb);
+	
+
 	ft_printmap(pb);
-	ft_rays_map_player(pb);
-	mlx_put_image_to_window(pb->mlx, pb->window, pb->img->img, 0, 0);
+	//ft_rays_map_player(pb);
+	//mlx_string_put(pb->mlx, pb->window, 25, 320, 0xffffff,"Leave Game : ESC");	
 }
 
 int	ft_key_press(int key, t_all *pb)
@@ -361,6 +368,8 @@ int	ft_key_press(int key, t_all *pb)
 	{
 		pb->plr->start_y -= sin(pb->plr->dir) * 4;
 		pb->plr->start_x += cos(pb->plr->dir) * 4;
+	//	if (pb->map_array[][] != '1')
+
 	}
 	if (key == 1)
 	{
@@ -368,16 +377,16 @@ int	ft_key_press(int key, t_all *pb)
 		pb->plr->start_x -= cos(pb->plr->dir) * 4;
 	}
 	if (key == 0)
-		pb->plr->dir -= 0.1;
-	if (key == 2)
 		pb->plr->dir += 0.1;
+	if (key == 2)
+		pb->plr->dir -= 0.1;
 	if (key == 53)
 	{
 		mlx_clear_window(pb->mlx, pb->window);
     	mlx_destroy_window(pb->mlx, pb->window);
 		exit(0);
 	}
-	ft_draw_screen(pb);
+	//ft_draw_screen(pb);
 
 	return (0);
 }
@@ -416,14 +425,22 @@ int		main(int argc, char **argv)
 	base.img = &img;
 	base.plr = &plr;
 
-    base.mlx = mlx_init();
-    base.window = mlx_new_window(base.mlx, 1024, 768, "Hello world!");
-
-    img.img = mlx_new_image(base.mlx, 1024, 768);
-    img.addr = mlx_get_data_addr(img.img, &img.bits_per_pixel, &img.line_length,
-                                 &img.endian);
-   
+	base.mlx = mlx_init();	
+	base.window = mlx_new_window(base.mlx, 1024, 768, "Hello world!");
+    
+	int i;
+	i = 0;
 	ft_draw_screen(&base);
+	//base.img->img = mlx_new_image(base.mlx, 1024, 768);
+	//base.img->addr = (int *)mlx_get_data_addr(base.img->img, &base.img->bits_per_pixel, &base.img->line_length,
+    //                             &base.img->endian);
+	while (i < base.screen_x * (base.screen_y / 2))
+	{
+		base.img->addr[i] = base.rgb_ceiling;
+		i++;
+	}
+	mlx_put_image_to_window(base.mlx, base.window, img.img, 0, 0);
+
 
 	mlx_hook(base.window, 2, 1L << 0, &ft_key_press, &base);
     mlx_loop(base.mlx);
