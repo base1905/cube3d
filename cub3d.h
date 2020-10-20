@@ -24,9 +24,6 @@
 # define MAP 16
 
 
-
-
-
 typedef struct  s_data {
     void        *img;
     char        *addr;

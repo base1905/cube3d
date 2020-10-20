@@ -248,10 +248,10 @@ void	ft_parcer(t_all *pb)
 
 void	my_mlx_pixel_put(t_data *img, int x, int y, int color)
 {
-   char    *dst;
+    char    *dst;
 
-   dst = img->addr + (y * img->line_length + x * (img->bits_per_pixel / 8));
-   *(unsigned int*)dst = color;
+    dst = img->addr + (y * img->line_length + x * (img->bits_per_pixel / 8));
+    *(unsigned int*)dst = color;
 }
 
 void	ft_ceiling_floor(t_all *pb)
@@ -296,13 +296,11 @@ void	ft_print_map_square(t_data *img, int x, int y)
 		x1 = back;
 			while (x1 < x2)
 			{
-				//img->addr[x1] = 0x00FFFFFF;
 				my_mlx_pixel_put(img, x1, y1, 0x00FFFFFF);
 				x1++;
 			}
 		y1++;
 	}
-	
 }
 void	ft_printmap(t_all *pb)
 {
@@ -327,6 +325,8 @@ void	ft_printmap(t_all *pb)
 
 void 	ft_rays_map_player(t_all *pb)
 {
+
+
 	t_player	ray = *pb->plr; // копируем координаты луча равные координатам игрока
 
 	float start = ray.dir - M_PI_4; // начало веера лучей
@@ -341,197 +341,46 @@ void 	ft_rays_map_player(t_all *pb)
 			ray.start_x += cos(start);
 			ray.start_y -= sin(start);
 			my_mlx_pixel_put(pb->img, ray.start_x, ray.start_y, 0x00000000);
-			
 		}
 		start += M_PI_2 / 40;
-		
 	}
-			printf("%f, %f ", pb->plr->start_x, pb->plr->start_y);
-
 }
 
-
-void	ft_draw_image()
+void ft_draw_screen(t_all *pb)
 {
-	pb->img->img = mlx_new_image(pb->mlx, 1024, 768);
-	pb->img->addr = mlx_get_data_addr(pb->img->img, &pb->img->bits_per_pixel, &pb->img->line_length,
-								&pb->img->endian);
-
 	ft_ceiling_floor(pb);
 	ft_printmap(pb);
 	ft_rays_map_player(pb);
-
-	ft_walls(pb, ...);
-	
-}
-
-void ft_draw_window(t_all *pb)
-{
-	base.window = mlx_new_window(base.mlx, 1024, 768, "Hello world!");
-
-	ft_draw_image();
-	
 	mlx_put_image_to_window(pb->mlx, pb->window, pb->img->img, 0, 0);
-	mlx_destroy_image(pb->mlx, pb->window);
-	pb->img->img = NULL;
-
-	mlx_hook(base.window, 2, 1L << 0, &ft_key_press, &base);
-    mlx_loop(base.mlx);
 }
-
-
-
 
 int	ft_key_press(int key, t_all *pb)
 {
 	mlx_clear_window(pb->mlx, pb->window);
 	if (key == 13)
 	{
-		if (pb->map_array[(int)floor(pb->plr->start_y) / MAP][(int)floor(pb->plr->start_x) / MAP] != '1')
-			{
-				if(worldMap[int(posX + dirX * moveSpeed)][int(posY)] == false)
-					posX += dirX * moveSpeed;
-      			if(worldMap[int(posX)][int(posY + dirY * moveSpeed)] == false)
-					posY += dirY * moveSpeed;
-			}
-		
+		pb->plr->start_y -= sin(pb->plr->dir) * 4;
+		pb->plr->start_x += cos(pb->plr->dir) * 4;
 	}
 	if (key == 1)
 	{
-		if (pb->map_array[(int)floor(pb->plr->start_y) / MAP][(int)floor(pb->plr->start_x) / MAP] != '1')
-			{
-				if(worldMap[int(posX - dirX * moveSpeed)][int(posY)] == false)
-					posX -= dirX * moveSpeed;
-     			if(worldMap[int(posX)][int(posY - dirY * moveSpeed)] == false)
-					posY -= dirY * moveSpeed;
-			}
+		pb->plr->start_y += sin(pb->plr->dir) * 4;
+		pb->plr->start_x -= cos(pb->plr->dir) * 4;
 	}
 	if (key == 0)
-		pb->plr->dir += 0.1;
-	if (key == 2)
 		pb->plr->dir -= 0.1;
+	if (key == 2)
+		pb->plr->dir += 0.1;
 	if (key == 53)
 	{
 		mlx_clear_window(pb->mlx, pb->window);
     	mlx_destroy_window(pb->mlx, pb->window);
 		exit(0);
 	}
-	if (key == 13 || key == 1)
-	{
+	ft_draw_screen(pb);
 
-		ft_draw_window(pb);
-		mlx_put_image_to_window(pb->mlx, pb->window, pb->img->img, 0, 0);
-		mlx_destroy_image(pb->mlx, pb->window);
-		pb->img->img = NULL;
-
-	}	
 	return (0);
 }
-
-ft_walls()
-{
-	while (x < res_x)
-		ft_raycaster(...);
-
-
-}
-
-void ft_raycaster(t_all *pb, int x)
-{
-	typedef struct		s_rays
-	{
-		double			cameraX;
-		double			deltaDistX;
-		double			deltaDistY;
-		double			sideDistX;
-		double			sideDistY;
-		int				mapX;
-		int				mapY;
-		int				stepX;
-		int				stepY;
-	}					t_rays;
-
-	typedef struct	s_camera
-	{
-		double		posX;
-		double		posY;
-		double		planeX;
-		double		planeY;
-		double		dirX;
-		double		dirY;
-		double		rayDirX;
-		double		rayDirY;
-		double		perpWallDist;
-		int			side;
-	}				t_camera;
-	
-	t_rays r;
-	t_camera c;
-
-
-	//calculate ray position and direction
-	r.cameraX = 2 * x / (double)pb->screen_x - 1; //x-coordinate in camera space
-	c.rayDirX = c.dirX + c.planeX * r.cameraX;
-	c.rayDirY = c.dirY + c.planeY * r.cameraX;
-	//which box of the map we're in
-	r.mapX = (int)floor(c.posX);
-	r.mapY = (int)floor(c.posY);
-	//length of ray from one x or y-side to next x or y-side
-	r.deltaDistX = fabs(1 / c.rayDirX);
-	r.deltaDistY = fabs(1 / c.rayDirY);
-
-	//calculate step and initial sideDist
-	if(c.rayDirX < 0)
-	{
-		r.stepX = -1;
-		r.sideDistX = (c.posX - r.mapX) * r.deltaDistX;
-	}
-	else
-	{
-		r.stepX = 1;
-		r.sideDistX = (r.mapX + 1.0 - c.posX) * r.deltaDistX;
-	}
-	if(c.rayDirY < 0)
-	{
-		r.stepY = -1;
-		r.sideDistY = (c.posY - r.mapY) * r.deltaDistY;
-	}
-	else
-	{
-		r.stepY = 1;
-		r.sideDistY = (r.mapY + 1.0 - c.posY) * r.deltaDistY;
-	}
-
-     //perform DDA
-	while (1)
-	{
-		//jump to next map square, OR in x-direction, OR in y-direction
-		if(r.sideDistX < r.sideDistY)
-		{
-			r.sideDistX += r.deltaDistX;
-			r.mapX += r.stepX;
-			c.side = 0;
-		}
-		else
-		{
-			r.sideDistY += r.deltaDistY;
-			r.mapY += r.stepY;
-			c.side = 1;
-		}
-		//Check if ray has hit a wall
-		if (pb->map_array[r.mapX][r.mapY] == '1')
-			break ;
-	}
-
-	  //Calculate distance projected on camera direction (Euclidean distance will give fisheye effect!)
-	if (c.side == 0) 
-		c.perpWallDist = (r.mapX - c.posX + (1 - r.stepX) / 2) / c.rayDirX;
-	else
-		c.perpWallDist = (r.mapY - c.posY + (1 - r.stepY) / 2) / c.rayDirY;
-
-}
-
-
 
 
 int		main(int argc, char **argv)
@@ -567,13 +416,17 @@ int		main(int argc, char **argv)
 	base.img = &img;
 	base.plr = &plr;
 
-	base.mlx = mlx_init();	
+    base.mlx = mlx_init();
+    base.window = mlx_new_window(base.mlx, 1024, 768, "Hello world!");
 
-	ft_fit_resolution();
-    
-	ft_initialization();
+    img.img = mlx_new_image(base.mlx, 1024, 768);
+    img.addr = mlx_get_data_addr(img.img, &img.bits_per_pixel, &img.line_length,
+                                 &img.endian);
+   
+	ft_draw_screen(&base);
 
-	ft_draw_window(&base);
+	mlx_hook(base.window, 2, 1L << 0, &ft_key_press, &base);
+    mlx_loop(base.mlx);
 
 
 }
