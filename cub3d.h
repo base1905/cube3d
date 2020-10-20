@@ -17,12 +17,11 @@
 #include <errno.h>
 #include <math.h>
 
-#include "minilibx/mlx.h"
+#include "mms/mlx.h"
 #include "libft/libft.h"
 #include "gnl/get_next_line.h"
 
 # define MAP 16
-
 
 typedef struct  s_data {
     void        *img;
@@ -30,6 +29,8 @@ typedef struct  s_data {
     int         bits_per_pixel;
     int         line_length;
     int         endian;
+    int         width;
+    int         height;
 }               t_data;
 
 typedef struct  s_player {
@@ -60,8 +61,7 @@ typedef struct  s_all
     void        *mlx;
     t_player    *plr;
     t_data      *img;
-    
+    t_data      tex[5];
 }               t_all;
-
 
 #endif

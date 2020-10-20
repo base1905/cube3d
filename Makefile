@@ -26,9 +26,9 @@ OBJ = $(subst .c,.o,$(SRC))
 
 LIBFT = ./libft/libft.a
 
-MINILIBX = ./minilibx/libmlx.a
+MINILIBX = ./mms/libmlx.dylib
 
-LIBRARIES = -lm -L./libft/ -lft -L./minilibx/ -lmlx  
+LIBRARIES = -lm -L./libft/ -lft -L./mms/ -lmlx libmlx.dylib 
 
 FRAMEWORKS = -framework OpenGL -framework Appkit
 
@@ -51,7 +51,8 @@ $(LIBFT):
 	@echo "\n"
 
 $(MINILIBX):
-	@cd minilibx && make
+	@cd mms && make
+	@cd mms && mv libmlx.dylib ..
 	@echo "\033[7;32m MiniLibX created \033[0m"
 	@echo "\n"
 
@@ -61,12 +62,13 @@ $(MINILIBX):
 clean:
 	cd libft && make clean
 	@echo "\033[2;32m Libft cleaned \033[0m"
-	cd minilibx && make clean
+	cd mms && make clean
 	@echo "\033[2;32m Minilibx cleaned \033[0m"
 	rm -f $(OBJ)
 
 fclean: clean
 	cd libft && make fclean
+	rm -f libmlx.dylib
 	rm -f $(NAME)
 
 re: fclean all

@@ -155,6 +155,33 @@ void	ft_path(char *s, char **path)
 	*path = ft_strdup(s);
 }
 
+void	ft_loadtex(t_all *pb)
+{
+	int i;
+
+	i = 0;
+	while (i < 0)
+	{
+		pb->tex[i].img = mlx_xpm_file_to_image(pb->mlx, pb->path[i], 
+			&(pb->tex[i].width), &(pb->tex[i].height));
+		if (pb->tex[i].img == NULL)
+		{
+			ft_putendl_fd("Structure doesn't load", 2);
+			ft_exit_error(pb);
+		}
+		pb->tex[i].addr = mlx_get_data_addr(pb->tex[i].img, 
+			&(pb->tex[i].bits_per_pixel), &(pb->tex[i].line_length), &(pb->tex[i].endian));
+		
+		if (pb->tex[i].addr == NULL)
+		{
+			ft_putendl_fd("Structure doesn't load", 2);
+			ft_exit_error(pb);
+		}
+		free(pb->path[i]);
+		pb->path[i] = NULL;
+	}
+}
+
 int		ft_rgb2int(int a, int r, int g, int b)
 {
 	return (a << 24 | r << 16 | g << 8 | b);
@@ -246,6 +273,8 @@ void	ft_parcer(t_all *pb)
  
 }
 
+
+
 void	my_mlx_pixel_put(t_data *img, int x, int y, int color)
 {
     char    *dst;
@@ -253,7 +282,6 @@ void	my_mlx_pixel_put(t_data *img, int x, int y, int color)
     dst = img->addr + (y * img->line_length + x * (img->bits_per_pixel / 8));
     *(unsigned int*)dst = color;
 }
-
 void	ft_ceiling_floor(t_all *pb)
 {
 	int x;
@@ -275,7 +303,6 @@ void	ft_ceiling_floor(t_all *pb)
 	}
 
 }
-
 void	ft_print_map_square(t_data *img, int x, int y)
 {
 	int x1;
@@ -322,7 +349,6 @@ void	ft_printmap(t_all *pb)
 		j++;
 	}
 }
-
 void 	ft_rays_map_player(t_all *pb)
 {
 
@@ -345,16 +371,14 @@ void 	ft_rays_map_player(t_all *pb)
 		start += M_PI_2 / 40;
 	}
 }
-
-void ft_draw_screen(t_all *pb)
+void	ft_draw_screen(t_all *pb)
 {
 	ft_ceiling_floor(pb);
 	ft_printmap(pb);
 	ft_rays_map_player(pb);
 	mlx_put_image_to_window(pb->mlx, pb->window, pb->img->img, 0, 0);
 }
-
-int	ft_key_press(int key, t_all *pb)
+int		ft_key_press(int key, t_all *pb)
 {
 	mlx_clear_window(pb->mlx, pb->window);
 	if (key == 13)
@@ -381,7 +405,6 @@ int	ft_key_press(int key, t_all *pb)
 
 	return (0);
 }
-
 
 int		main(int argc, char **argv)
 {
@@ -411,22 +434,39 @@ int		main(int argc, char **argv)
 	ft_initstruct(&base, &plr);
 	ft_parcer(&base);
 
-	printf("%d\n", base.rgb_ceiling);
-    
+
+//// Testing parser out put
+	printf("Ceiling color=%d\n", base.rgb_ceiling);
+	printf("Floor color=%d\n", base.rgb_floor);
+
+	int x, y;
+
+	y = 0;
+	x = 0;
+
+	while (base.map_array[y] != NULL)
+	{
+		x = 0;
+		while (base.map_array[y][x] != '\0')
+			{
+				printf("%c", base.map_array[y][x]);
+				x++;
+			}
+		printf("\n");
+		y++;
+	}
+//// Testing parser out put
+
 	base.img = &img;
 	base.plr = &plr;
 
-    base.mlx = mlx_init();
-    base.window = mlx_new_window(base.mlx, 1024, 768, "Hello world!");
-
-    img.img = mlx_new_image(base.mlx, 1024, 768);
-    img.addr = mlx_get_data_addr(img.img, &img.bits_per_pixel, &img.line_length,
-                                 &img.endian);
-   
+	base.mlx = mlx_init();
+	base.window = mlx_new_window(base.mlx, 1024, 768, "cub3D");
+	img.img = mlx_new_image(base.mlx, 1024, 768);
+	img.addr = mlx_get_data_addr(img.img, &img.bits_per_pixel, &img.line_length,
+								&img.endian);
+//	ft_loadtex(&base);
 	ft_draw_screen(&base);
-
 	mlx_hook(base.window, 2, 1L << 0, &ft_key_press, &base);
-    mlx_loop(base.mlx);
-
-
+	mlx_loop(base.mlx);
 }
