@@ -17,10 +17,7 @@ SRC = gnl/get_next_line.c gnl/get_next_line_utils.c cub3d.c
 CC = gcc
 CFLAGS = -Wall -Wextra -Werror -g
 
-#	-Ldir
-#	Add directory dir to the list of directories to be searched for -l.
-
-HEADER = cub3d.h	
+HEADER = cub3d.h
 
 OBJ = $(subst .c,.o,$(SRC))
 
@@ -28,7 +25,7 @@ LIBFT = ./libft/libft.a
 
 MINILIBX = ./mms/libmlx.dylib
 
-LIBRARIES = -lm -L./libft/ -lft -L./mms/ -lmlx libmlx.dylib 
+LIBRARIES = $(LIBFT) $(MINILIBX)
 
 FRAMEWORKS = -framework OpenGL -framework Appkit
 
@@ -40,7 +37,7 @@ all: $(NAME)
 #	$^	The names of all the prerequisites, with spaces between them.
 
 $(NAME): $(OBJ) 
-	$(CC) -o $@ $^ $(CFLAGS) $(LIBRARIES) $(FRAMEWORKS) 
+	$(CC) -o $@ $^ $(CFLAGS) $(LIBRARIES) $(FRAMEWORKS)
 
 %.o: %.c $(HEADER) $(LIBFT) $(MINILIBX)
 	$(CC) $(CFLAGS)  -c $< -o $@
@@ -52,12 +49,9 @@ $(LIBFT):
 
 $(MINILIBX):
 	@cd mms && make
-	@cd mms && mv libmlx.dylib ..
+	@cd mms && cp libmlx.dylib ..
 	@echo "\033[7;32m MiniLibX created \033[0m"
 	@echo "\n"
-
-# make -C 	‘-C dir’ 
-# 			‘--directory=dir’ Change to directory dir before reading the makefiles.
 
 clean:
 	cd libft && make clean
@@ -68,7 +62,7 @@ clean:
 
 fclean: clean
 	cd libft && make fclean
-	rm -f libmlx.dylib
+	cd mms & rm -f libmlx.dylib
 	rm -f $(NAME)
 
 re: fclean all

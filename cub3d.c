@@ -392,9 +392,9 @@ int		ft_key_press(int key, t_all *pb)
 		pb->plr->start_x -= cos(pb->plr->dir) * 4;
 	}
 	if (key == 0)
-		pb->plr->dir -= 0.1;
-	if (key == 2)
 		pb->plr->dir += 0.1;
+	if (key == 2)
+		pb->plr->dir -= 0.1;
 	if (key == 53)
 	{
 		mlx_clear_window(pb->mlx, pb->window);
