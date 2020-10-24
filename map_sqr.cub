@@ -1,0 +1,27 @@
+R  1214 721
+
+NO ./path_ to_the_north_texture
+
+SOd ./path_to_the_south_textureqq3 * M_PI_2v3 * M_PI_23 * M_PI_2
+
+WE ./path_to_the_west_texture
+
+EA ./path_to_the_east_texture
+
+S ./path_to_the_sprite_texture
+
+F 122,4,235
+
+C 254,117,254
+
+11111111111111
+10000000000001
+10000000000001
+1000N000000001
+10000000000001
+11111110000001
+      10000001
+      10000001
+      10000001
+      10000001
+      11111111
