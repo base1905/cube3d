@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   res_checker.c                                      :+:      :+:    :+:   */
+/*   checker_res.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: arannara <base1905@yandex.ru>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -15,17 +15,11 @@
 void	ft_resolution(t_all *pb, char *s)
 {
 	if (pb->screen_x != 0 && pb->screen_y != 0)
-	{
-		ft_putendl_fd("Dublicate flag R",2);
-		ft_exit_error(pb);
-	}
+		ft_exit_error(8, pb);
 	while (*s == ' ')
 		s++;
 	if (!ft_isdigit(*s))
-		{
-			ft_putendl_fd("Resolution error",2);
-			ft_exit_error(pb);
-		}
+			ft_exit_error(9, pb);
 	pb->screen_x = ft_atoi(s);
 	while (ft_isdigit(*s))
 		s++;
@@ -35,16 +29,9 @@ void	ft_resolution(t_all *pb, char *s)
 	while (ft_isdigit(*s))
 		s++;
 	if (*s != '\0')
-	{
-		ft_putendl_fd("Unacceptable symbol in/after resolution",2);
-		ft_exit_error(pb);
-	}
+		ft_exit_error(10, pb);
 	if (pb->screen_x < 4 || pb->screen_y < 4)
-	{
-		ft_putendl_fd("Resolution is too small",2);
-		ft_exit_error(pb);
-	}
-
+		ft_exit_error(11, pb);
 }
 
 int		ft_rgb2int(int a, int r, int g, int b)
@@ -65,10 +52,7 @@ void	ft_rgb(t_all *pb, char *s, int *rgb)
 		if (ft_isdigit(*s) && ft_atoi(s) >= 0 && ft_atoi(s) < 256)
 			digit[i] = ft_atoi(s);
 		else
-		{
-			ft_putendl_fd("Error! Not RGB digit!",2);
-			ft_exit_error(pb);
-		}
+			ft_exit_error(12, pb);
 		while (ft_isdigit(*s))
 			s++;
 		if (*s == ',')

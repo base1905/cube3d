@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   init.c                                             :+:      :+:    :+:   */
+/*   checker_tex.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: arannara <base1905@yandex.ru>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -11,44 +11,45 @@
 /* ************************************************************************** */
 
 #include "../cub3d.h"
+#include <stdio.h>
 
-void	ft_initstruct(t_all *pb)
+void	ft_path(t_all *pb, char *s, char **path)
 {
-	int i;
-
-	pb->line = NULL;
-	pb->bmp_screenshot = 0;
-	pb->screen_x = 0;
-	pb->screen_y = 0;
-	pb->map_height = 0;
-	pb->map_width = 0;
-	pb->map_string = NULL;
-	pb->map_array = NULL;
-	i = -1;
-	while (++i < 5)
-	{
-		pb->path[i] = NULL;
-		pb->tex[i].img = NULL;
-		pb->tex[i].addr = NULL;
-	}
-	pb->window = NULL;
-	pb->mlx = NULL;
-
-	pb->plr->up = 0;
-	pb->plr->down = 0;
-	pb->plr->left = 0;
-	pb->plr->right = 0;
-	pb->plr->leftrot = 0;
-	pb->plr->rightrot = 0;
-
-	pb->plr->start_x = -1;
-	pb->plr->start_y = -1;
-	pb->plr->dir = 0;
-	
-
-
-
-
+	if (*path != NULL)
+		ft_exit_error(8, pb);
+	if (!ft_isspace(*s) && *s != '\0')
+		ft_exit_error(14, pb);
+	if (*s == '\0')
+		ft_exit_error(15, pb);
+	if(strncmp(s + ft_strlen(s) - 4, ".xpm", 4) != 0)
+		ft_exit_error(16, pb);
+	while (*s == ' ')
+		s++;
+	*path = ft_strdup(s);
 }
 
 
+void	ft_loadtex(t_all *pb)
+{
+	int i;
+
+	i = -1;
+	while (++i < 5)
+	{
+		pb->tex[i].img = mlx_xpm_file_to_image(pb->mlx, pb->path[i], 
+			&(pb->tex[i].width), &(pb->tex[i].height));
+		if (pb->tex[i].img == NULL)
+			ft_exit_error(17, pb);
+
+		pb->tex[i].addr = (int *)mlx_get_data_addr(pb->tex[i].img, 
+			&(pb->tex[i].bits_per_pixel), &(pb->tex[i].line_length), &(pb->tex[i].endian));
+		if (pb->tex[i].addr == NULL)
+			ft_exit_error(17, pb);
+
+		
+
+		free(pb->path[i]);
+		pb->path[i] = NULL;
+		
+	}
+}

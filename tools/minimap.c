@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   map_mini.c                                         :+:      :+:    :+:   */
+/*   minimap.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: arannara <base1905@yandex.ru>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -18,10 +18,9 @@ void	ft_print_map_square(t_data *img, int x, int y)
 	int x2;
 	int y1;
 	int y2;
-
 	int back;
 
-	x1 = x * MAP;
+	x1 = x * MAP; //minimap MAP
 	x2 = x1 + MAP;
 	y1 = y * MAP;
 	y2 = y1 + MAP;

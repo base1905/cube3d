@@ -13,8 +13,10 @@
 NAME = cub3D
 
 SRC = gnl/get_next_line.c gnl/get_next_line_utils.c cub3d.c \
-		tools/map_checker.c tools/exit.c tools/init.c tools/raycast.c \
-		tools/res_checker.c tools/map_checker.c tools/map_mini.c
+		tools/checker_map.c tools/exit.c tools/init.c tools/raycast.c \
+		tools/checker_res.c tools/checker_map.c tools/minimap.c \
+		tools/screenshot.c tools/checker_tex.c tools/parser_map.c \
+		tools/movement.c tools/sprite.c tools/parser_sprt.c
 
 CC = gcc
 CFLAGS = -Wall -Wextra -Werror -g
