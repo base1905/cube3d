@@ -16,14 +16,14 @@ void	ft_resolution(t_all *pb, char *s)
 {
 	if (pb->screen_x != 0 && pb->screen_y != 0)
 		ft_exit_error(8, pb);
-	while (*s == ' ')
+	while (ft_isspace(*s))
 		s++;
 	if (!ft_isdigit(*s))
-			ft_exit_error(9, pb);
+		ft_exit_error(9, pb);
 	pb->screen_x = ft_atoi(s);
 	while (ft_isdigit(*s))
 		s++;
-	while (*s == ' ')
+	while (ft_isspace(*s))
 		s++;
 	pb->screen_y = ft_atoi(s);
 	while (ft_isdigit(*s))
@@ -39,26 +39,64 @@ int		ft_rgb2int(int a, int r, int g, int b)
 	return (a << 24 | r << 16 | g << 8 | b);
 }
 
+int		ft_comma(char *s)
+{
+	int c;
+
+	c = 0;
+	while (*s)
+	{
+		if (*s == ',')
+			c++;
+		s++;
+	}
+	return (c);
+}
+
+int		ft_intnum(char *s)
+{
+	int c;
+
+	c = 0;
+	while (*s)
+	{
+		while (ft_isspace(*s))
+			s++;
+		if (ft_isdigit(*s))
+			c++;
+		while (ft_isdigit(*s))
+			s++;
+		if (*s != ',' && *s != '\0')
+			return (-1);
+		if (*s == ',')
+			s++;
+	}
+	return (c);
+}
+
 void	ft_rgb(t_all *pb, char *s, int *rgb)
 {
 	int i;
 	int digit[3];
 
 	i = 0;
-	while (*s && i < 3)
+	if (*rgb != -1)
+		ft_exit_error(8, pb);
+	while (ft_isspace(*s))
+		s++;
+	while (i < 3)
 	{
-		while (*s == ' ')
-			s++;
-		if (ft_isdigit(*s) && ft_atoi(s) >= 0 && ft_atoi(s) < 256)
+		if (ft_atoi(s) >= 0 && ft_atoi(s) < 256)
+		{
 			digit[i] = ft_atoi(s);
+		}
 		else
 			ft_exit_error(12, pb);
 		while (ft_isdigit(*s))
 			s++;
-		if (*s == ',')
+		while (*s == ',' || *s == ' ')
 			s++;
 		i++;
 	}
-	*rgb = ft_rgb2int(0, digit[0], digit[1], digit[2]); 
-	
+	*rgb = ft_rgb2int(0, digit[0], digit[1], digit[2]);
 }

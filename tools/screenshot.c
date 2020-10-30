@@ -46,7 +46,7 @@ int		bmp_data(int fd, t_all *pb, int padsize)
 	int				y;
 	int				pixel;
 
-	y = pb->screen_y;   // -1 if not --y
+	y = pb->screen_y;
 	ft_bzero(zero, 3);
 	while (--y >= 0)
 	{
@@ -68,9 +68,9 @@ int		take_screenshot(t_all *pb)
 	int padsize;
 	int fd;
 
-    ft_draw_screen(pb);
+	ft_draw_screen(pb);
 	padsize = (4 - ((int)pb->screen_x * 3) % 4) % 4;
-	if ((fd = open("screenshot.bmp", 
+	if ((fd = open("screenshot.bmp",
 			O_WRONLY | O_CREAT, 0777 | O_TRUNC | O_APPEND)) < 0)
 		return (0);
 	bmp_header(fd, pb->screen_y, pb->screen_x, padsize);
@@ -81,9 +81,9 @@ int		take_screenshot(t_all *pb)
 
 void	make_screenshot(t_all *pb)
 {
-	pb->img->addr_int = (int *)mlx_get_data_addr(pb->img->img, 
-						&pb->img->bits_per_pixel, &pb->img->line_length, &pb->img->endian);
+	pb->img->addr_int = (int *)mlx_get_data_addr(pb->img->img,
+		&pb->img->bits_per_pixel, &pb->img->line_length, &pb->img->endian);
 	if (!take_screenshot(pb))
-        ft_exit_error(3, pb);
-    ft_exit_error(0, pb);
+		ft_exit_error(3, pb);
+	ft_exit_error(0, pb);
 }

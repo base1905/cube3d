@@ -18,10 +18,9 @@
 # include <limits.h>
 # include "../libft/libft.h"
 
-# define BUFFER_SIZE 32
+# define BUFFER_SIZE 1
 
 size_t	ft_strlen(const char *s);
-//char	*ft_strdup(const char *str);
 char	*ft_strjoin_free(char *s1, char *s2);
 char	*ft_strchr_n(const char *s);
 int		get_next_line(int fd, char **line);

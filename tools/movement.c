@@ -12,7 +12,7 @@
 
 #include "../cub3d.h"
 
-int			ft_key_press(int key, t_all *pb)
+int				ft_key_press(int key, t_all *pb)
 {
 	if (key == 1 || key == 125)
 		pb->plr->down = 1;
@@ -27,15 +27,15 @@ int			ft_key_press(int key, t_all *pb)
 	else if (key == 124)
 		pb->plr->rightrot = 1;
 	else if (key == 53)
-    {
+	{
 		mlx_clear_window(pb->mlx, pb->window);
 		mlx_destroy_window(pb->mlx, pb->window);
-		exit(0);
-    }
+		ft_exit_error(0, pb);
+	}
 	return (0);
 }
 
-int			ft_key_release(int key, t_all *pb)
+int				ft_key_release(int key, t_all *pb)
 {
 	if (key == 1 || key == 125)
 		pb->plr->down = 0;
@@ -49,11 +49,10 @@ int			ft_key_release(int key, t_all *pb)
 		pb->plr->leftrot = 0;
 	else if (key == 124)
 		pb->plr->rightrot = 0;
-
 	return (0);
 }
 
-void		ft_rotation(t_all *pb, float speed)
+static void		ft_rotation(t_all *pb, float speed)
 {
 	if (pb->plr->rightrot == 1)
 		pb->plr->dir -= M_PI * (speed / 6);
@@ -61,7 +60,7 @@ void		ft_rotation(t_all *pb, float speed)
 		pb->plr->dir += M_PI * (speed / 6);
 }
 
-void		ft_up_down_left_right(t_all *pb, float speed)
+static void		ft_up_down_left_right(t_all *pb, float speed)
 {
 	if (pb->plr->up == 1)
 	{
@@ -76,7 +75,7 @@ void		ft_up_down_left_right(t_all *pb, float speed)
 	if (pb->plr->left == 1)
 	{
 		pb->plr->start_y -= sin(pb->plr->dir + M_PI / 2) * MAP * speed;
-		pb->plr->start_x += cos(pb->plr->dir + M_PI / 2) * MAP * speed; 
+		pb->plr->start_x += cos(pb->plr->dir + M_PI / 2) * MAP * speed;
 	}
 	if (pb->plr->right == 1)
 	{
@@ -85,12 +84,9 @@ void		ft_up_down_left_right(t_all *pb, float speed)
 	}
 }
 
-int			ft_movement(t_all *pb)
+int				ft_movement(t_all *pb)
 {
-	float	speed;
-
-	speed = 0.1;
-	ft_up_down_left_right(pb, speed);
-	ft_rotation(pb, speed);
+	ft_up_down_left_right(pb, SPEED);
+	ft_rotation(pb, SPEED);
 	return (0);
 }

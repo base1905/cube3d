@@ -1,6 +1,18 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   sprite.c                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: arannara <base1905@yandex.ru>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2020/10/05 13:21:53 by arannara          #+#    #+#             */
+/*   Updated: 2020/10/05 15:41:51 by arannara         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../cub3d.h"
 
-void			sort_sprite(t_all *pb)
+static void		sort_sprite(t_all *pb)
 {
 	int			i;
 	t_sprite	tmp;
@@ -18,7 +30,7 @@ void			sort_sprite(t_all *pb)
 	}
 }
 
-float			fix_delta_angle(float fov_start, float sprite_dir)
+static float	fix_delta_angle(float fov_start, float sprite_dir)
 {
 	float		delta;
 
@@ -43,8 +55,6 @@ void			get_sprite_params(t_all *pb)
 									pb->sprite[i].x - pb->plr->start_x);
 		pb->sprite[i].dist = hypot(pb->sprite[i].y - pb->plr->start_y,
 									pb->sprite[i].x - pb->plr->start_x);
-		// pb->sprite[i].dist *= cos(pb->plr->dir + (FOV / 2)
-		// 											- pb->plr->dir);
 		pb->sprite[i].size = (int)((MAP / pb->sprite[i].dist)
 										* pb->plr->projection_plan);
 		pb->sprite[i].delta = fix_delta_angle(pb->plr->dir + (FOV / 2),
@@ -57,7 +67,7 @@ void			get_sprite_params(t_all *pb)
 	sort_sprite(pb);
 }
 
-int				sprite_color(t_all *pb, int y_line, int i)
+static int		sprite_color(t_all *pb, int y_line, int i)
 {
 	int			color;
 	int			y_texture;
@@ -69,7 +79,8 @@ int				sprite_color(t_all *pb, int y_line, int i)
 	if (x_texture > 63)
 		x_texture = 63;
 	color = *(pb->tex[4].addr + (int)((int)y_texture * (pb->tex[4].line_length /
-			sizeof(int)) + x_texture * ((pb->tex[4].bits_per_pixel / 8) / sizeof(int))));
+			sizeof(int))
+			+ x_texture * ((pb->tex[4].bits_per_pixel / 8) / sizeof(int))));
 	return (color);
 }
 

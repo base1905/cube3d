@@ -14,9 +14,10 @@ NAME = cub3D
 
 SRC = gnl/get_next_line.c gnl/get_next_line_utils.c cub3d.c \
 		tools/checker_map.c tools/exit.c tools/init.c tools/raycast.c \
-		tools/checker_res.c tools/checker_map.c tools/minimap.c \
+		tools/checker_res.c tools/checker_map.c tools/parser_processor.c\
 		tools/screenshot.c tools/checker_tex.c tools/parser_map.c \
-		tools/movement.c tools/sprite.c tools/parser_sprt.c
+		tools/movement.c tools/sprite.c tools/checker_spr.c \
+		tools/raycast2.c
 
 CC = gcc
 CFLAGS = -Wall -Wextra -Werror -g
@@ -27,7 +28,7 @@ OBJ = $(subst .c,.o,$(SRC))
 
 LIBFT = ./libft/libft.a
 
-MINILIBX = ./minilibx/libmlx.a
+MINILIBX = ./mms/libmlx.dylib
 
 LIBRARIES = $(LIBFT) $(MINILIBX)
 
@@ -52,21 +53,22 @@ $(LIBFT):
 	@echo "\n"
 
 $(MINILIBX):
-	@cd minilibx && make
-	#@cd mms && cp libmlx.dylib ..
+	@cd mms && make
+	@cd mms && cp libmlx.dylib ..
 	@echo "\033[7;32m MiniLibX created \033[0m"
 	@echo "\n"
 
 clean:
 	cd libft && make clean
 	@echo "\033[2;32m Libft cleaned \033[0m"
-	cd minilibx && make clean
+	cd mms && make clean
 	@echo "\033[2;32m Minilibx cleaned \033[0m"
 	rm -f $(OBJ)
 
 fclean: clean
 	cd libft && make fclean
-	cd minilibx & rm -f libmlx.dylib
+	cd mms & rm -f libmlx.dylib
+	rm -f screenshot.bmp
 	rm -f $(NAME)
 
 re: fclean all
