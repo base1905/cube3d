@@ -35,6 +35,10 @@ static void	ft_exit_error3(int c)
 		ft_putstr_fd("No argument with map file\n", 2);
 	else if (c == 21)
 		ft_putstr_fd("Wrong RGB color\n", 2);
+	else if (c == 22)
+		ft_putstr_fd("Parcer RGB error\n", 2);
+	else if (c == 23)
+		ft_putstr_fd("Not all keys defined\n", 2);
 }
 
 static void	ft_exit_error2(int c)
@@ -61,7 +65,7 @@ static void	ft_exit_error2(int c)
 	else if (c == 10)
 		ft_putendl_fd("Unacceptable symbol in/after resolution\n", 2);
 	else if (c == 11)
-		ft_putendl_fd("Resolution is too big or too small\n", 2);
+		ft_putendl_fd("Resolution is too small or over MAX_INT\n", 2);
 	else
 		ft_exit_error3(c);
 }

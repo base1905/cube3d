@@ -22,7 +22,7 @@ static double	horizontal_intersection(t_all *pb, double start)
 	x_hor = 0;
 	y_hor = 0;
 	y_hor = (int)(pb->plr->start_y / MAP) * MAP;
-	y_hor += (pb->ray->is_up) ? -0.001 : MAP;
+	y_hor += (pb->ray->is_up) ? -0.00001 : MAP;
 	x_hor = pb->plr->start_x + (pb->plr->start_y - y_hor) / tan(start);
 	x_diff = MAP / tan(start);
 	x_diff *= (pb->ray->is_left && x_diff > 0) ? -1 : 1;
@@ -49,7 +49,7 @@ static double	vertical_intersection(t_all *pb, double start)
 	x_vert = 0;
 	y_vert = 0;
 	x_vert = (int)(pb->plr->start_x / MAP) * MAP;
-	x_vert += (pb->ray->is_right) ? MAP : -0.001;
+	x_vert += (pb->ray->is_right) ? MAP : -0.00001;
 	y_vert = pb->plr->start_y + (pb->plr->start_x - x_vert) * tan(start);
 	y_diff = MAP * tan(start);
 	y_diff *= (pb->ray->is_up && y_diff > 0) ? -1 : 1;

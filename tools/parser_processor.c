@@ -17,13 +17,13 @@ int		ft_processor(t_all *pb)
 	if (strncmp(pb->line, "R ", 2) == 0)
 		ft_resolution(pb, pb->line + 1);
 	else if (strncmp(pb->line, "NO ", 3) == 0)
-		ft_path(pb, pb->line + 2, &(pb->path[0]));
-	else if (strncmp(pb->line, "SO ", 3) == 0)
 		ft_path(pb, pb->line + 2, &(pb->path[1]));
+	else if (strncmp(pb->line, "SO ", 3) == 0)
+		ft_path(pb, pb->line + 2, &(pb->path[3]));
 	else if (strncmp(pb->line, "WE ", 3) == 0)
 		ft_path(pb, pb->line + 2, &(pb->path[2]));
 	else if (strncmp(pb->line, "EA ", 3) == 0)
-		ft_path(pb, pb->line + 2, &(pb->path[3]));
+		ft_path(pb, pb->line + 2, &(pb->path[0]));
 	else if (strncmp(pb->line, "S ", 2) == 0)
 		ft_path(pb, pb->line + 1, &(pb->path[4]));
 	else if (strncmp(pb->line, "F ", 2) == 0)

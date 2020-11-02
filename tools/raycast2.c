@@ -29,7 +29,8 @@ static void	line_drawing(t_all *pb, double slice_height, int txt_nbr,
 		slice_height = pb->screen_y;
 	}
 	step_y = pb->tex[txt_nbr].height / (slice_height - height_diff);
-	y = ((pb->screen_y - slice_height) / 2);
+	
+	y = ((pb->screen_y - slice_height + 1) / 2);
 	y1 = pb->screen_y - y;
 	while (y < y1)
 	{
@@ -66,7 +67,9 @@ void		draw_vertical_line(t_all *pb, double start)
 	pb->ray->ray_intersection = (pb->ray->what_intersection == 0) ?
 	pb->ray->intersection_x : pb->ray->intersection_y;
 	txt_nbr = choose_texture(pb);
+	
 	pb->ray->ray_fixed = pb->ray->ray_len * cos(start - pb->plr->dir);
+
 	pb->texture_x = (int)((int)pb->ray->ray_intersection % MAP %
 		pb->tex[txt_nbr].width);
 	if (pb->ray->ray_fixed != 0)

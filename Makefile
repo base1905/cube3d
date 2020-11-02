@@ -68,6 +68,8 @@ clean:
 fclean: clean
 	cd libft && make fclean
 	cd mms & rm -f libmlx.dylib
+	rm -f libmlx.dylib
+	rm -f cub3D
 	rm -f screenshot.bmp
 	rm -f $(NAME)
 

@@ -65,8 +65,8 @@ void		ft_initstruct(t_all *pb)
 
 	pb->line = NULL;
 	pb->bmp_screenshot = 0;
-	pb->screen_x = 0;
-	pb->screen_y = 0;
+	pb->screen_x = -1;
+	pb->screen_y = -1;
 	pb->map_height = 0;
 	pb->map_width = 0;
 	pb->map_string = NULL;

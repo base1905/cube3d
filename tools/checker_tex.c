@@ -23,7 +23,6 @@ void	ft_path(t_all *pb, char *s, char **path)
 	if (strncmp(s + ft_strlen(s) - 4, ".xpm", 5) != 0)
 		ft_exit_error(16, pb);
 	*path = ft_strdup(s);
-	printf("%s|\n", s);
 }
 
 void	ft_loadtex(t_all *pb)
