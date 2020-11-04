@@ -95,9 +95,6 @@ void			draw_sprite(t_all *pb)
 	{
 		if (pb->sprite[i].size > pb->screen_y)
 			pb->sprite[i].size = 0;
-		if (pb->sprite[i].hor_offset < 0 && pb->sprite[i].hor_offset >
-											pb->screen_y - 1)
-			pb->sprite[i].size = 0;
 		if (pb->ray->x_line >= pb->sprite[i].hor_offset &&
 			pb->ray->x_line <= pb->sprite[i].hor_offset + pb->sprite[i].size
 			&& pb->sprite[i].dist < pb->ray->ray_len)

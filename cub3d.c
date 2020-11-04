@@ -77,13 +77,6 @@ static void	ft_args(t_all *pb, int argc, char **argv)
 	}
 }
 
-static void			ft_ok(t_all *pb)
-{
-	if (pb->screen_x == -1 || pb->screen_y == -1 || 
-		pb->rgb_floor == -1 || pb->rgb_ceiling == -1 || pb->map_array == NULL)
-	ft_exit_error(23, pb);
-}
-
 int			main(int argc, char **argv)
 {
 	t_all		base;

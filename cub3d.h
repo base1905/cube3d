@@ -144,5 +144,6 @@ void			find_player(t_all *pb);
 void			find_sprites(t_all *pb);
 void			get_sprites(t_all *pb);
 void			draw_vertical_line(t_all *pb, double start);
+void			ft_ok(t_all *pb);
 
 #endif

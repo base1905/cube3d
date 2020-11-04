@@ -12,6 +12,13 @@
 
 #include "../cub3d.h"
 
+void	ft_ok(t_all *pb)
+{
+	if (pb->screen_x == -1 || pb->screen_y == -1 ||
+		pb->rgb_floor == -1 || pb->rgb_ceiling == -1 || pb->map_array == NULL)
+		ft_exit_error(23, pb);
+}
+
 int		ft_processor(t_all *pb)
 {
 	if (strncmp(pb->line, "R ", 2) == 0)
